@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ma Valentine ?</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #fff0f5 0%, #ffe4e9 100%);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+      cursor: default;
+    }
+    
+    .container {
+      text-align: center;
+      z-index: 10;
+      max-width: 90%;
+      transition: transform 0.3s ease;
+      padding: 20px;
+    }
+    
+    h1 {
+      font-size: 3.5rem;
+      color: #e91e63;
+      margin-bottom: 2rem;
+      text-shadow: 0 2px 10px rgba(233, 30, 99, 0.3);
+      animation: pulse 1.5s infinite;
+      line-height: 1.2;
+      text-align: center;
+    }
+    
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+    
+    .heart-icon {
+      font-size: 8rem;
+      color: #ff4081;
+      margin: 1.5rem 0;
+      animation: bounce 1.2s infinite;
+      text-shadow: 0 5px 15px rgba(255, 64, 129, 0.4);
+    }
+    
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-20px); }
+    }
+    
+    .buttons-container {
+      position: relative;
+      margin: 2rem auto;
+      min-height: 80px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 30px;
+      flex-wrap: wrap;
+    }
+    
+    button {
+      font-size: 1.6rem;
+      font-weight: bold;
+      padding: 16px 45px;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      z-index: 5;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+      min-width: 140px;
+    }
+    
+    #yes-btn {
+      background: linear-gradient(45deg, #ff4081, #e91e63);
+      color: white;
+      z-index: 20;
+      position: relative;
+    }
+    
+    #yes-btn:hover {
+      transform: scale(1.12) rotate(2deg);
+      box-shadow: 0 8px 25px rgba(233, 30, 99, 0.5);
+      background: linear-gradient(45deg, #ff1a75, #d81b60);
+    }
+    
+    #no-btn {
+      background: linear-gradient(45deg, #e0e0e0, #9e9e9e);
+      color: #424242;
+      position: fixed;
+      z-index: 1000;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+      transition: all 0.2s ease !important;
+    }
+    
+    #no-btn:hover {
+      transform: scale(1.15) rotate(0deg) !important;
+      box-shadow: 0 6px 25px rgba(0, 0, 0, 0.35);
+      background: linear-gradient(45deg, #bdbdbd, #757575);
+      z-index: 2000 !important;
+    }
+    
+    .hearts-row {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 2.5rem;
+      flex-wrap: wrap;
+    }
+    
+    .hearts-row div {
+      font-size: 2.8rem;
+      animation: float 3s infinite ease-in-out;
+    }
+    
+    .hearts-row div:nth-child(2) { animation-delay: 0.2s; }
+    .hearts-row div:nth-child(3) { animation-delay: 0.4s; }
+    .hearts-row div:nth-child(4) { animation-delay: 0.6s; }
+    .hearts-row div:nth-child(5) { animation-delay: 0.8s; }
+    .hearts-row div:nth-child(6) { animation-delay: 1.0s; }
+    .hearts-row div:nth-child(7) { animation-delay: 1.2s; }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-15px) rotate(10deg); }
+    }
+    
+    #heart-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 5;
+      display: none;
+    }
+    
+    .falling-heart {
+      position: absolute;
+      font-size: 2.5rem;
+      opacity: 0;
+      animation: fall linear forwards;
+      text-shadow: 0 0 10px rgba(255, 64, 129, 0.8);
+      z-index: 3;
+    }
+    
+    @keyframes fall {
+      0% {
+        transform: translateY(-50px) rotate(0deg) scale(0.3);
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+        transform: translateY(0) rotate(0deg) scale(1);
+      }
+      90% {
+        opacity: 0.7;
+      }
+      100% {
+        transform: translateY(100vh) rotate(720deg) scale(0.6);
+        opacity: 0;
+      }
+    }
+    
+    #message-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 240, 245, 0.97);
+      z-index: 20;
+      display: none;
+      text-align: center;
+      padding: 2rem;
+    }
+    
+    #message-container h2 {
+      font-size: 5.5rem;
+      color: #e91e63;
+      margin-bottom: 1.5rem;
+      text-shadow: 0 3px 15px rgba(233, 30, 99, 0.4);
+      animation: pop 0.6s ease-out;
+      position: relative;
+      z-index: 10;
+    }
+    
+    @keyframes pop {
+      0% { transform: scale(0.5) rotate(-10deg); opacity: 0; }
+      60% { transform: scale(1.1) rotate(5deg); }
+      80% { transform: scale(0.95) rotate(-3deg); }
+      100% { transform: scale(1) rotate(0deg); opacity: 1; }
+    }
+    
+    #message-container p {
+      font-size: 2.2rem;
+      color: #880e4f;
+      max-width: 700px;
+      line-height: 1.5;
+      margin-top: 1.5rem;
+      text-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      position: relative;
+      z-index: 10;
+      font-weight: 500;
+    }
+    
+    .tease-message {
+      position: fixed;
+      background: rgba(233, 30, 99, 0.85);
+      color: white;
+      padding: 12px 25px;
+      border-radius: 50px;
+      font-weight: bold;
+      font-size: 1.5rem;
+      z-index: 1500;
+      box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
+      animation: message-float 3s forwards;
+      text-align: center;
+      min-width: 250px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    
+    @keyframes message-float {
+      0% { bottom: 20px; opacity: 0; transform: translateX(-50%) scale(0.8); }
+      20% { opacity: 1; transform: translateX(-50%) scale(1.05); }
+      80% { opacity: 1; }
+      100% { bottom: 100px; opacity: 0; transform: translateX(-50%) scale(0.9); }
+    }
+    
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 2.6rem;
+        padding: 0 15px;
+      }
+      
+      .heart-icon {
+        font-size: 5.5rem;
+      }
+      
+      button {
+        font-size: 1.4rem;
+        padding: 14px 35px;
+        min-width: 130px;
+      }
+      
+      .hearts-row div {
+        font-size: 2.2rem;
+      }
+      
+      #message-container h2 {
+        font-size: 3.8rem;
+      }
+      
+      #message-container p {
+        font-size: 1.8rem;
+        padding: 0 20px;
+      }
+      
+      .buttons-container {
+        gap: 15px;
+        min-height: 70px;
+      }
+    }
+    
+    @media (max-width: 320px) {
+      h1 {
+        font-size: 2.2rem;
+      }
+      
+      .heart-icon {
+        font-size: 4.5rem;
+      }
+      
+      button {
+        font-size: 1.3rem;
+        padding: 12px 25px;
+        min-width: 120px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container" id="question-container">
+    <h1>Veux-tu être le Valentine de Nourdine ?</h1>
+    <div class="heart-icon">❤️</div>
+    <div class="buttons-container">
+      <button id="yes-btn">Oui</button>
+      <button id="no-btn">Non</button>
+    </div>
+    <div class="hearts-row">
+      <div>❤️</div>
+      <div>❤️</div>
+      <div>❤️</div>
+      <div>❤️</div>
+      <div>❤️</div>
+      <div>❤️</div>
+      <div>❤️</div>
+    </div>
+  </div>
+  
+  <div id="heart-container"></div>
+  <div id="message-container">
+    <h2>Houmm ! ❤️</h2>
+    <p>Tu veux Bonbon ?❤️<br>Ou la lune? ❤️</p>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const yesBtn = document.getElementById('yes-btn');
+      const noBtn = document.getElementById('no-btn');
+      const questionContainer = document.getElementById('question-container');
+      const heartContainer = document.getElementById('heart-container');
+      const messageContainer = document.getElementById('message-container');
+      
+      // Position initiale du bouton "Non"
+      positionNoButtonInitial();
+      
+      // Fonction pour positionner initialement le bouton "Non" près du bouton "Oui"
+      function positionNoButtonInitial() {
+        const yesBtnRect = yesBtn.getBoundingClientRect();
+        const containerRect = document.querySelector('.buttons-container').getBoundingClientRect();
+        
+        // Positionner à droite du bouton "Oui"
+        const initialLeft = yesBtnRect.right + 20;
+        const initialTop = containerRect.top + (containerRect.height - noBtn.offsetHeight) / 2;
+        
+        noBtn.style.left = `${initialLeft}px`;
+        noBtn.style.top = `${initialTop}px`;
+        noBtn.style.position = 'fixed';
+      }
+      
+      // Fonction pour déplacer le bouton "Non" n'importe où sur l'écran
+      function moveNoButton() {
+        // Dimensions de l'écran
+        const maxX = window.innerWidth - noBtn.offsetWidth - 20;
+        const maxY = window.innerHeight - noBtn.offsetHeight - 20;
+        
+        // S'assurer que les valeurs sont positives
+        const safeMaxX = Math.max(0, maxX);
+        const safeMaxY = Math.max(0, maxY);
+        
+        // Générer une position aléatoire
+        const randomX = Math.floor(Math.random() * safeMaxX) + 10;
+        const randomY = Math.floor(Math.random() * safeMaxY) + 10;
+        
+        // Appliquer la nouvelle position
+        noBtn.style.left = `${randomX}px`;
+        noBtn.style.top = `${randomY}px`;
+        
+        // Ajouter une rotation aléatoire
+        const randomRotate = (Math.random() - 0.5) * 20;
+        noBtn.style.transform = `rotate(${randomRotate}deg)`;
+        
+        // Message taquin si l'utilisateur essaie trop de cliquer sur "Non"
+        showTeaseMessage();
+      }
+      
+      // Fonction pour afficher un message taquin
+      function showTeaseMessage() {
+        // Supprimer les messages précédents
+        document.querySelectorAll('.tease-message').forEach(el => el.remove());
+        
+        // Créer un nouveau message
+        const messages = [
+          "Non n'est pas une option ! 😘",
+          "Tu es fait pour dire OUI ! ❤️",
+          "Encore un effort... ou dis OUI ! 😊",
+          "Le NON n'existe pas ici ! 💕",
+        ];
+        
+        const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+        const teaseMsg = document.createElement('div');
+        teaseMsg.className = 'tease-message';
+        teaseMsg.textContent = randomMessage;
+        teaseMsg.style.bottom = `${Math.random() * 30 + 20}px`;
+        document.body.appendChild(teaseMsg);
+        
+        // Supprimer après l'animation
+        setTimeout(() => {
+          if (teaseMsg.parentNode) {
+            teaseMsg.parentNode.removeChild(teaseMsg);
+          }
+        }, 3000);
+      }
+      
+      // Événements pour le bouton "Non"
+      noBtn.addEventListener('mouseenter', moveNoButton);
+      noBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        moveNoButton();
+        showTeaseMessage();
+        
+        // Petit effet de vibration
+        noBtn.style.animation = 'shake 0.5s';
+        setTimeout(() => {
+          noBtn.style.animation = '';
+        }, 500);
+      });
+      
+      // Ajouter une animation de secousse
+      const style = document.createElement('style');
+      style.innerHTML = `
+        @keyframes shake {
+          0%, 100% { transform: translateX(0) rotate(0); }
+          10%, 30%, 50%, 70%, 90% { transform: translateX(-5px) rotate(-3deg); }
+          20%, 40%, 60%, 80% { transform: translateX(5px) rotate(3deg); }
+        }
+      `;
+      document.head.appendChild(style);
+      
+      // Fonction pour créer les cœurs tombants
+      function createHearts() {
+        // Afficher le conteneur de cœurs et le message
+        heartContainer.style.display = 'block';
+        messageContainer.style.display = 'flex';
+        questionContainer.style.display = 'none';
+        noBtn.style.display = 'none';
+        yesBtn.style.display = 'none';
+        
+        // Créer 120 cœurs
+        for (let i = 0; i < 120; i++) {
+          setTimeout(() => {
+            const heart = document.createElement('div');
+            heart.className = 'falling-heart';
+            heart.innerHTML = '❤️';
+            
+            // Position horizontale aléatoire
+            const randomX = Math.random() * 100;
+            heart.style.left = `${randomX}%`;
+            
+            // Taille aléatoire
+            const randomSize = 1.0 + Math.random() * 3.0;
+            heart.style.fontSize = `${randomSize}rem`;
+            
+            // Durée d'animation aléatoire
+            const randomDuration = 6 + Math.random() * 12;
+            heart.style.animationDuration = `${randomDuration}s`;
+            
+            // Délai aléatoire
+            const randomDelay = Math.random() * 5;
+            heart.style.animationDelay = `${randomDelay}s`;
+            
+            // Rotation initiale aléatoire
+            const randomRotate = Math.random() * 360;
+            heart.style.transform = `rotate(${randomRotate}deg)`;
+            
+            // Couleur aléatoire dans les tons de rose/rouge
+            const colors = ['#ff4081', '#e91e63', '#f06292', '#d81b60', '#ff80ab', '#c2185b'];
+            heart.style.color = colors[Math.floor(Math.random() * colors.length)];
+            
+            heartContainer.appendChild(heart);
+            
+            // Supprimer les cœurs après l'animation pour optimiser
+            setTimeout(() => {
+              if (heart.parentNode) {
+                heart.parentNode.removeChild(heart);
+              }
+            }, (randomDuration + randomDelay) * 1000);
+          }, i * 80); // Espace entre chaque cœur
+        }
+      }
+      
+      // Événement pour le bouton "Oui"
+      yesBtn.addEventListener('click', createHearts);
+      
+      // Gérer le redimensionnement de la fenêtre
+      window.addEventListener('resize', () => {
+        if (noBtn.style.position === 'fixed') {
+          positionNoButtonInitial();
+        }
+      });
+      
+      // Empêcher le clic droit sur le bouton "Non"
+      noBtn.addEventListener('contextmenu', (e) => {
+        e.preventDefault();
+        moveNoButton();
+        showTeaseMessage();
+      });
+      
+      // Rendre le bouton "Non" plus rapide si l'utilisateur essaie de le suivre avec la souris
+      let lastMoveTime = 0;
+      document.addEventListener('mousemove', (e) => {
+        const now = Date.now();
+        if (now - lastMoveTime > 500) { // Toutes les 500ms
+          const noBtnRect = noBtn.getBoundingClientRect();
+          const mouseX = e.clientX;
+          const mouseY = e.clientY;
+          
+          // Vérifier si la souris est proche du bouton "Non"
+          const distance = Math.sqrt(
+            Math.pow(mouseX - (noBtnRect.left + noBtnRect.width/2), 2) + 
+            Math.pow(mouseY - (noBtnRect.top + noBtnRect.height/2), 2)
+          );
+          
+          // Si la souris est à moins de 150px, déplacer le bouton
+          if (distance < 150) {
+            moveNoButton();
+            lastMoveTime = now;
+          }
+        }
+      });
+    });
+  </script>
+</body>
+</html>
+
